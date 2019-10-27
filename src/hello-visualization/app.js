@@ -57,7 +57,7 @@ angular.module('app', []).component('app', {
       qHyperCubeDef: {
         qDimensions: [{
           qDef: {
-            qFieldDefs: ['Movie'],
+            qFieldDefs: ['Movies'],
             qSortCriterias: [{
               qSortByAscii: 1,
             }],
@@ -74,8 +74,8 @@ angular.module('app', []).component('app', {
         },
         {
           qDef: {
-            qDef: '[imdbRating]',
-            qLabel: 'imdb rating',
+            qDef: '[Year]',
+            qLabel: 'Year',
           },
         }],
         qInitialDataFetch: [{
@@ -97,46 +97,46 @@ angular.module('app', []).component('app', {
       this.painted = true;
     };
 
-    const linechartProperties = {
-      qInfo: {
-        qType: 'visualization',
-        qId: '',
-      },
-      type: 'my-picasso-linechart',
-      labels: true,
-      qHyperCubeDef: {
-        qDimensions: [{
-          qDef: {
-            qFieldDefs: ['Year'],
-            qSortCriterias: [{
-              qSortByAscii: 1,
-            }],
-          },
-        }],
-        qMeasures: [{
-          qDef: {
-            qDef: 'Sum([Adjusted Costs])',
-            qLabel: 'Adjusted Costs in total ($)',
-          },
-          qSortBy: {
-            qSortByNumeric: -1,
-          },
-        },
-        ],
-        qInitialDataFetch: [{
-          qTop: 0, qHeight: 50, qLeft: 0, qWidth: 3,
-        }],
-        qSuppressZero: false,
-        qSuppressMissing: false,
-      },
-    };
+    // const linechartProperties = {
+    //   qInfo: {
+    //     qType: 'visualization',
+    //     qId: '',
+    //   },
+    //   type: 'my-picasso-linechart',
+    //   labels: true,
+    //   qHyperCubeDef: {
+    //     qDimensions: [{
+    //       qDef: {
+    //         qFieldDefs: ['Year'],
+    //         qSortCriterias: [{
+    //           qSortByAscii: 1,
+    //         }],
+    //       },
+    //     }],
+    //     qMeasures: [{
+    //       qDef: {
+    //         qDef: 'Sum([Adjusted Costs])',
+    //         qLabel: 'Adjusted Costs in total ($)',
+    //       },
+    //       qSortBy: {
+    //         qSortByNumeric: -1,
+    //       },
+    //     },
+    //     ],
+    //     qInitialDataFetch: [{
+    //       qTop: 0, qHeight: 50, qLeft: 0, qWidth: 3,
+    //     }],
+    //     qSuppressZero: false,
+    //     qSuppressMissing: false,
+    //   },
+    // };
 
-    const linechart = new Linechart();
+    // const linechart = new Linechart();
 
-    const paintLineChart = (layout) => {
-      linechart.paintLinechart(document.getElementById('chart-container-linechart'), layout);
-      this.painted = true;
-    };
+    // const paintLineChart = (layout) => {
+    //   linechart.paintLinechart(document.getElementById('chart-container-linechart'), layout);
+    //   this.painted = true;
+    // };
 
     this.generateGUID = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
       // eslint-disable-next-line no-bitwise
@@ -170,48 +170,48 @@ angular.module('app', []).component('app', {
       halyard.addTable(tableMovie);
 
       // Add web data
-      (async () => {
-        const data = await $http.get('https://gist.githubusercontent.com/carlioth/b86ede12e75b5756c9f34c0d65a22bb3/raw/e733b74c7c1c5494669b36893a31de5427b7b4fc/MovieInfo.csv');
-        const table = new Halyard.Table(data.data, { name: 'MoviesInfo', delimiter: ';', characterSet: 'utf8' });
-        halyard.addTable(table);
-        let qix;
-        try {
-          qix = await enigma.create(config).open();
-          this.connected = true;
-          this.connecting = false;
-        } catch (error) {
-          this.error = 'Could not connect to QIX Engine';
-          this.connecting = false;
-        }
+      // (async () => {
+      //   const data = await $http.get('https://gist.githubusercontent.com/carlioth/b86ede12e75b5756c9f34c0d65a22bb3/raw/e733b74c7c1c5494669b36893a31de5427b7b4fc/MovieInfo.csv');
+      //   const table = new Halyard.Table(data.data, { name: 'MoviesInfo', delimiter: ';', characterSet: 'utf8' });
+      //   halyard.addTable(table);
+      //   let qix;
+      //   try {
+      //     qix = await enigma.create(config).open();
+      //     this.connected = true;
+      //     this.connecting = false;
+      //   } catch (error) {
+      //     this.error = 'Could not connect to QIX Engine';
+      //     this.connecting = false;
+      //   }
 
-        try {
-          app = await qix.createSessionAppUsingHalyard(halyard);
-        } catch (error) {
-          this.error = 'Could not create session app';
-          this.connected = false;
-          this.connecting = false;
-        }
-        await app.getAppLayout();
+      //   try {
+      //     app = await qix.createSessionAppUsingHalyard(halyard);
+      //   } catch (error) {
+      //     this.error = 'Could not create session app';
+      //     this.connected = false;
+      //     this.connecting = false;
+      //   }
+      //   await app.getAppLayout();
 
-        scatterplotObject = await app.createSessionObject(scatterplotProperties);
+      //   scatterplotObject = await app.createSessionObject(scatterplotProperties);
 
-        const updateScatterPlot = (async () => {
-          const layout = await scatterplotObject.getLayout();
-          paintScatterPlot(layout);
-        });
+      //   const updateScatterPlot = (async () => {
+      //     const layout = await scatterplotObject.getLayout();
+      //     paintScatterPlot(layout);
+      //   });
 
-        scatterplotObject.on('changed', updateScatterPlot);
-        updateScatterPlot();
+      //   scatterplotObject.on('changed', updateScatterPlot);
+      //   updateScatterPlot();
 
-        linechartObject = await app.createSessionObject(linechartProperties);
-        const linechartUpdate = (async () => {
-          const layout = await linechartObject.getLayout();
-          paintLineChart(layout);
-        });
+      //   // linechartObject = await app.createSessionObject(linechartProperties);
+      //   // const linechartUpdate = (async () => {
+      //   //   const layout = await linechartObject.getLayout();
+      //   //   paintLineChart(layout);
+      //   // });
 
-        linechartObject.on('changed', linechartUpdate);
-        linechartUpdate();
-      })();
+      //   // linechartObject.on('changed', linechartUpdate);
+      //   // linechartUpdate();
+      // })();
     };
 
     this.clearAllSelections = () => {

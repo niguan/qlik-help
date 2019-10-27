@@ -30,10 +30,10 @@ export default class Scatterplot {
           data: {
             extract: {
               field: 'qDimensionInfo/0',
-              props: {
+              props: { 
                 movie: { value: (v) => v.qText },
                 cost: { field: 'qMeasureInfo/0' },
-                rating: { field: 'qMeasureInfo/1' },
+                year: { field: 'qMeasureInfo/1' },
               },
             },
           },
@@ -106,7 +106,7 @@ export default class Scatterplot {
             }],
           },
           settings: {
-            x: { scale: 'x', ref: 'rating' },
+            x: { scale: 'x', ref: 'year' },
             y: { scale: 'y', ref: 'cost' },
             size: 0.4,
             opacity: 0.8,
@@ -177,8 +177,8 @@ export default class Scatterplot {
       description: item[4].qText,
     }));
 
-    const image = document.getElementsByClassName('movie-image')[0];
-    image.src = data[0].image;
+    // const image = document.getElementsByClassName('movie-image')[0];
+    // image.src = data[0].image;
 
     const title = document.getElementsByClassName('movie-title')[0];
     title.innerHTML = data[0].movie;
